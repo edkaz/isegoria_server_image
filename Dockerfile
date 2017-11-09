@@ -7,13 +7,10 @@ LABEL maintainer="Yikai Gong - yikaig@student.unimelb.edu.au"
 ARG InstitutionName=Institution
 ARG CampusName=Campus
 
-USER root
-
 ENV DEBIAN_FRONTEND=noninteractive
-ENV TOMCAT_VERSION=8.5.23
-ENV JENKINS_VERSION=2.73.3
 ENV NEO4J_VERSION=3.1.3
 
+USER root
 RUN apt-get update && apt-get install -y software-properties-common \
     openssh-client curl sudo vim net-tools locales python3-software-properties \
     tar unzip openjdk-8-jdk git maven
@@ -54,4 +51,5 @@ RUN chmod +x ${SCRIPT_BASE}/*.sh
 
 
 ENTRYPOINT ["/root/startup.sh"]
-#CMD ["/usr/lib/postgresql/9.5/bin/postgres", "-D", "/var/lib/postgresql/9.5/main", "-c", "config_file=/etc/postgresql/9.5/main/postgresql.conf"]
+
+EXPOSE 8080
