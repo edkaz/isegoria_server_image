@@ -8,7 +8,7 @@ ARG InstitutionName=Institution
 ARG CampusName=Campus
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV NEO4J_VERSION=3.1.3
+ENV NEO4J_VERSION=3.3.0
 
 USER root
 RUN apt-get update && apt-get install -y software-properties-common \
@@ -24,14 +24,13 @@ ENV LC_ALL="en_AU.UTF-8"
 ## ====== Install Neo4j =========
 ENV NEO4J_HOME=/opt/neo4j
 ENV NEO4J_DATA_DIR=/mnt/data
-ADD binary /opt
-RUN cd /opt && tar -zxf neo4j-enterprise-${NEO4J_VERSION}-unix.tar.gz && \
+RUN curl -s https://neo4j.com/artifact.php?name=neo4j-enterprise-${NEO4J_VERSION}-unix.tar.gz | tar -xz -C /opt && \
     ln -s /opt/neo4j-enterprise-${NEO4J_VERSION} ${NEO4J_HOME} && \
-    rm /opt/neo4j-enterprise-${NEO4J_VERSION}-unix.tar.gz && \
     mkdir -p ${NEO4J_DATA_DIR} && echo "dbms.directories.data=${NEO4J_DATA_DIR}" >> ${NEO4J_HOME}/conf/neo4j.conf
 ENV PATH ${PATH}:${NEO4J_HOME}/bin
 
 ## ====== Install API =========
+ADD binary /opt
 ARG Neo4j_PWD=X8+Q4^9]1715q|W
 ENV NEO4j_PWD=${Neo4j_PWD}
 ENV INSTITUTION=${InstitutionName}
