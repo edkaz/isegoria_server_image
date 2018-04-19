@@ -11,3 +11,11 @@
 - 115.146.95.30 is the url of my docker repository. It can be changed to others
 
 - -e "INSTITUTION=UniMelb" -e "CAMPUS=parkville" are runtime variable. It can be used to setup institution name and its campus
+
+- Neo4j CLI client: ``$ cypher-shell -u neo4j -p 'X8+Q4^9]1715q|W'``
+
+
+
+docker pull 115.146.95.30:5000/isegoria_server:0.1.0
+
+

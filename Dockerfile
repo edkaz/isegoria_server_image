@@ -13,7 +13,10 @@ ENV NEO4J_VERSION=3.3.0
 USER root
 RUN apt-get update && apt-get install -y software-properties-common \
     openssh-client curl sudo vim net-tools locales python3-software-properties \
-    tar unzip openjdk-8-jdk git maven
+    tar unzip openjdk-8-jdk git maven awscli
+
+ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+ENV PATH ${PATH}:${JAVA_HOME}
 
 # Setup local specific information for encoding
 RUN locale-gen "en_AU.UTF-8"
@@ -41,13 +44,15 @@ ADD config ${API_HOME}
 RUN sed -i -e "s/^spring.data.neo4j.username=.*$/spring.data.neo4j.username=neo4j/g" ${API_HOME}/application.properties && \
     sed -i -e "s/^spring.data.neo4j.password=.*$/spring.data.neo4j.password=${Neo4j_PWD}/g" ${API_HOME}/application.properties
 
-
 ## ==================== Setup scripts ================================
 ENV SCRIPT_BASE=/root
 ADD script/startup.sh ${SCRIPT_BASE}
-ENV PATH ${PATH}:${SCRIPT_BASE}
+ADD script/backup_neo4j_to_s3.sh ${SCRIPT_BASE}
 RUN chmod +x ${SCRIPT_BASE}/*.sh
+ENV PATH ${PATH}:${SCRIPT_BASE}
 
+ADD script/backup_neo4j_crontab /etc/cron.d/backup_neo4j
+RUN chmod 0644 /etc/cron.d/backup_neo4j
 
 ENTRYPOINT ["/root/startup.sh"]
 
