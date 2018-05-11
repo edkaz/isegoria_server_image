@@ -36,7 +36,7 @@ sed -i -e "s/^institution.campus=.*$/institution.campus=${CAMPUS}/g" ${API_HOME}
 
 #Start API
 cd ${API_HOME}
-java -jar *.war --spring.config.location=./application.properties:/overrides.properties & api_pid=$!
+java -jar -Dserver.contextPath=/dbInterface *.war --spring.config.location=./application.properties:/overrides.properties & api_pid=$!
 
 
 echo "Start Up Ending"
