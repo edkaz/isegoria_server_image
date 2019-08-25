@@ -33,7 +33,7 @@ RUN curl -s https://neo4j.com/artifact.php?name=neo4j-enterprise-${NEO4J_VERSION
 ENV PATH ${PATH}:${NEO4J_HOME}/bin
 
 ## ====== Install API =========
-ADD binary /opt
+ADD binary/dbInterface-0.1.0.war /opt
 ARG Neo4j_PWD=X8+Q4^9]1715q|W
 ENV NEO4j_PWD=${Neo4j_PWD}
 ENV INSTITUTION=${InstitutionName}
@@ -43,6 +43,13 @@ RUN mkdir -p ${API_HOME} && mv /opt/dbInterface-0.1.0.war ${API_HOME}
 ADD config ${API_HOME}
 RUN sed -i -e "s/^spring.data.neo4j.username=.*$/spring.data.neo4j.username=neo4j/g" ${API_HOME}/application.properties && \
     sed -i -e "s/^spring.data.neo4j.password=.*$/spring.data.neo4j.password=${Neo4j_PWD}/g" ${API_HOME}/application.properties
+
+## ====== Install APOC for Neo4j =========
+ADD binary/apoc-3.3.0.4-all.jar ${NEO4J_HOME}/plugins
+RUN chmod +rx ${NEO4J_HOME}/plugins/*.jar
+RUN echo "dbms.security.procedures.unrestricted=apoc.export.*,apoc.import.*" >> ${NEO4J_HOME}/conf/neo4j.conf && \
+    echo "apoc.export.file.enabled=true" >> ${NEO4J_HOME}/conf/neo4j.conf && \
+    echo "apoc.import.file.enabled=true" >> ${NEO4J_HOME}/conf/neo4j.conf
 
 ## ==================== Setup scripts ================================
 ENV SCRIPT_BASE=/root
