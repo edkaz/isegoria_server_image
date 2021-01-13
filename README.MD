@@ -1,6 +1,6 @@
 ##Usage
 
-1. Crate ./binary in this directory. Put dbInterface-0.1.0.war into ./binary
+1. Create ./binary in this directory. Put dbInterface-0.1.0.war into ./binary
 
 2. Build image via: ``$ docker build -t 45.113.234.214:5000/isegoria_server:0.1.0  --build-arg 'Neo4j_PWD=X8+Q4^9]1715q|W' .``
 
